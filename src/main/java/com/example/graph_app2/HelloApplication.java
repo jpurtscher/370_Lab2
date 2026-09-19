@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Line;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.Random;
 
 public class HelloApplication extends Application {
@@ -15,6 +16,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) {
 
+        //variables for coordinates
         int startX = 0;
         int startY = 0;
         int endX = 0;
@@ -23,18 +25,30 @@ public class HelloApplication extends Application {
         int gridStartX = 70;
         int gridStartY = 40;
 
-        int rectangleStartX = 95;
-        int rectangleStartY = 65;
-
+        //setting scene
         Pane root = new Pane();
         Scene scene = new Scene(root, 640, 640);
 
+        Pane barPane = new Pane();
+        root.getChildren().add(barPane);
+
+        //button logic
         Button random = new Button();
         random.setText("Redraw");
 
         random.setLayoutX(280);
         random.setLayoutY(600);
+
+        //clear and redraw bars on press
+        random.setOnAction(event -> {
+            barPane.getChildren().clear();
+            drawBars(barPane);
+        });
+
         root.getChildren().add(random);
+
+        // Draw bars
+        drawBars(barPane);
 
         // Vertical grid lines
         for (int i = 0; i <= 10; i++) {
@@ -62,18 +76,49 @@ public class HelloApplication extends Application {
             root.getChildren().add(line);
         }
 
-        for( int i = 0; i <= 10; i++){
-            Rectangle rectangle = new Rectangle();
-
-            root.getChildren().add(rectangle);
-        }
-
         stage.setTitle("Random Bar Chart");
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void main(String[] args) {
+
+    void drawBars(Pane barPane) {
+
+        Random rand = new Random();
+
+        int rectangleStartX = 75;
+        int rectangleWidth = 40;
+
+        for (int i = 0; i < 10; i++) {
+
+            // Calculate X position
+            int rectangleGridStartX = rectangleStartX + (i * 50);
+
+            // Random height
+            int rectangleHeight = rand.nextInt(500) + 1;
+
+            int rectangleStartY = 540 - rectangleHeight;
+
+            // Random color
+            int red = rand.nextInt(256);
+            int green = rand.nextInt(256);
+            int blue = rand.nextInt(256);
+
+            Color randomColor = Color.rgb(red, green, blue);
+
+            // Create bar
+            Rectangle rectangle = new Rectangle();
+
+            rectangle.setX(rectangleGridStartX);
+            rectangle.setY(rectangleStartY);
+            rectangle.setWidth(rectangleWidth);
+            rectangle.setHeight(rectangleHeight);
+            rectangle.setFill(randomColor);
+
+            barPane.getChildren().add(rectangle);
+        }
+    }
+        public static void main(String[] args) {
         launch(args);
     }
 }
